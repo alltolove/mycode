@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>FISHC RESTAURANT</title>
+    <link rel="stylesheet" href="bootstrap3/css/bootstrap.min.css">
+    <script src="bootstrap3/js/jquery.min.js"></script>
+    <script src="bootstrap3/js/bootstrap.min.js"></script>
+</head>
+<body class="container" ng-app="">
+<%include header.ejs%>
+<h5 class="page-header text-left" id="username"><%=username%></h5>
+<h1 class="page-header text-center">您已登录成功&nbsp请点餐</h1>
+<table class="table table-hover" ng-controller="cartcontroler">
+    <label style="width: 100%">查找<input type="text" class="form-control" style="width: 20%" ng-model="search"></label>
+    <tr><th>id</th><th>菜名</th><th>购买数量</th><th>价钱</th><th>状态</th><th>总价</th><th></th></tr>
+    <tr ng-repeat="item in cart|filter:search">
+        <td>{{item.id}}</td>
+        <td>{{item.name}}</td>
+        <td><button type="button" class="btn btn-danger glyphicon glyphicon-plus" ng-click="add(item.id)"></button>
+            &nbsp;{{item.count}}&nbsp;
+            <button type="button" class="btn btn-danger glyphicon glyphicon-minus" ng-click="sub(item.id)"></button>
+        </td>
+        <td>{{item.price|currency}}</td>
+        <td>{{item.statu}}</td>
+        <td>{{item.price*item.count|currency}}</td>
+    </tr>
+    <tr>
+        <td colspan="5">您购买的总价格：{{totalprice()|currency}}</td>
+        <td><form action="admin" method="post"></form>
+                <button type="button" class="btn btn-danger" ng-click="fn()">提交</button>
+        </td>
+    </tr>
+</table>
+<script>
+    if($('#username').html()=='admin'){
+        $('<input type="submit" class="btn btn-danger" value="管理员页">').appendTo($('form'))
+    }
+    var cartcontroler=function($scope) {
+        $scope.cart=[{
+            id:1,
+            name:'宫保鸡丁',
+            count:0,
+            price:100,
+            statu:'有货'
+        },{
+            id:2,
+            name:'鱼香肉丝',
+            count:0,
+            price:100,
+            statu:'有货'
+        },{
+            id:3,
+            name:'红烧甲鱼',
+            count:0,
+            price:100,
+            statu:'有货'
+        },{
+            id:4,
+            name:'燕京纯生',
+            count:0,
+            price:50,
+            statu:'有货'
+        },{
+            id:5,
+            name:'米饭',
+            count:0,
+            price:10,
+            statu:'有货'
+        },{
+            id:6,
+            name:'羊肉串',
+            count:0,
+            price:20,
+            statu:'有货'
+        }];
+        function findIndex(id){
+            var index=-1;
+            angular.forEach($scope.cart,function(item,key){
+                if(item.id==id){
+                    index=key;
+                }
+            });
+            return index
+        }
+        $scope.add = function (id){
+            var index=findIndex(id);
+            if(index!=-1){
+                $scope.cart[index].count++;
+            }
+        }
+        $scope.sub = function (id){
+            var index=findIndex(id);
+            var item=$scope.cart[index].count;
+            if(index!=-1){
+                if(item>0) {
+                    $scope.cart[index].count--;
+                }
+            }
+        }
+        $scope.fn=function(){
+            var myfood={};
+            var foods=[];
+            myfood.user=$('#username').html();
+            angular.forEach($scope.cart,function(item,key) {
+                    if(item.count!=0){
+                        foods.push(item.name+item.count);
+                    }
+                });
+            myfood.price=$scope.totalprice();
+            myfood.foods=foods.join();
+            var a=confirm(myfood.user+'您定了'+myfood.foods+'总价：'+myfood.price);
+            if(a){
+                $.post(
+                    '/myjson2',
+                        myfood
+                );
+                window.location='http://127.0.0.1:3000/submit'
+            }
+        }
+        $scope.totalprice=function(){
+            var total=0;
+            angular.forEach($scope.cart,function(item){
+                total+=(item.price*item.count);
+            });
+            return total;
+        }
+    }
+</script>
+<script src="angular-1.2.32.min.7zip.js"></script>
+</body>
+</html>

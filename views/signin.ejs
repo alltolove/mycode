@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>FISHC RESTAURANT</title>
+    <link rel="stylesheet" href="bootstrap3/css/bootstrap.min.css">
+    <script src="bootstrap3/js/jquery.min.js"></script>
+    <script src="bootstrap3/js/bootstrap.min.js"></script>
+    <script>
+            var name=[];
+            var flag=true;
+            $.post(
+                    '/myjson',
+                    function (data) {
+                        for(i=0;i<data.length;i++){
+                            name[i]=JSON.stringify({username:data[i].username,password:data[i].password});
+                        }
+                    });
+    </script>
+</head>
+<body class="container">
+<%include header.ejs%>
+<h1 class="page-header text-center">Welcome to sign in page</h1>
+<form action="dosignin" method="post" onsubmit="return myjson()">
+<div class="input-group">
+    <span class="input-group-addon">@</span>
+    <input id="username" name="username" style="ime-mode:disabled" type="text" class="form-control" placeholder="Username">
+</div>
+<div class="input-group">
+    <span class="input-group-addon">@</span>
+    <input id="password" name="password" type="password" class="form-control" placeholder="password">
+</div>
+<button class="btn btn-default">submit</button>
+</form>
+<div class="text"></div>
+<script>
+    function myjson() {
+        var a=JSON.stringify({username:$('#username').val(),password:$('#password').val()});
+        if((name.indexOf(a))==-1){
+            flag=false;
+            alert('您的用户名和密码不匹配，请重新登录');
+            window.location='http://127.0.0.1:3000/signin'
+        }
+        return flag;
+    }
+</script>
+</body>
+</html>

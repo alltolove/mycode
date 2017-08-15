@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>FISHC RESTAURANT</title>
+    <link rel="stylesheet" href="bootstrap3/css/bootstrap.min.css">
+    <script src="bootstrap3/js/jquery.min.js"></script>
+    <script src="bootstrap3/js/bootstrap.min.js"></script>
+    <script>
+        var name=[];
+        $.post(
+                '/myjson',
+                function (data) {
+                    for(i=0;i<data.length;i++){
+                        name[i]=data[i].username;
+                    }
+                });
+    </script>
+</head>
+<body class="container">
+    <%include header.ejs%>
+    <h1 class="page-header text-center">Welcome to regist page</h1>
+        <div class="input-group">
+            <span class="input-group-addon">@</span>
+            <input id="username" style="ime-mode:disabled" type="text" class="form-control" placeholder="Username">
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">@</span>
+            <input id="password" type="password" class="form-control" placeholder="password">
+        </div>
+        <button onclick="fn()" class="btn btn-default">submit</button>
+        <div class="text"></div>
+    <script type="text/javascript" charset="utf-8">
+        function fn(){
+            un = $('#username').val();
+            pw = $('#password').val();
+            if(name.indexOf(un)==-1) {
+                $.post('/doregist', {
+                    'username': un,
+                    'password': pw
+                }, function (result) {
+                    if (result == '0') {
+                        $('.text').html('您的用户已创建成功，请手动进行登录');
+                    }
+                });
+            }else{
+                $('.text').html('您的用户名与别人重复，请另起个用户名');
+            }
+        }
+    </script>
+</body>
+</html>
