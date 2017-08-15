@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>FISHC RESTAURANT</title>
+    <link rel="stylesheet" href="bootstrap3/css/bootstrap.min.css">
+    <script src="bootstrap3/js/jquery.min.js"></script>
+    <script src="bootstrap3/js/bootstrap.min.js"></script>
+</head>
+<body class="container">
+<h1 class="page-header text-center">管理员界面</h1>
+<%for(i=0;i<result.length;i++){%>
+<ul>
+    <li>
+        用户名：<%=result[i].username%>
+    </li>
+    <li>
+        密码：<%=result[i].password%>
+    </li>
+    <li>
+        点餐数量：<%=result[i].foods%>
+    </li>
+    <li>
+        总价：<%=result[i].price%>
+    </li>
+    <li>
+        日期：<%=result[i].date%>
+    </li>
+</ul>
+<%}%>
+</body>
+</html>
